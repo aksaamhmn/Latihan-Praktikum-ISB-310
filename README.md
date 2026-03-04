@@ -13,6 +13,7 @@ Repository ini berisi kumpulan latihan untuk mata kuliah ISB-310 Praktikum Siste
 
 - [Week 1: Pembuatan Halaman Web APAWEH SHOES](https://github.com/aksaamhmn/Latihan-Praktikum-ISB-310/tree/week-1)
 - [Week 2: Pengembangan Fitur APAWEH SHOES](https://github.com/aksaamhmn/Latihan-Praktikum-ISB-310/tree/week-2)
+- [Week 3: Integrasi PHP, Session & Cookies (Sistem Login) APAWEH SHOES](https://github.com/aksaamhmn/Latihan-Praktikum-ISB-310/tree/week-3)
 - _(Akan terus diperbarui setiap minggu)_
 
 ---
