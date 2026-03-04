@@ -6,35 +6,42 @@ Sebuah aplikasi web sederhana untuk mengelola katalog sepatu, dilengkapi dengan 
 
 Aplikasi ini mensimulasikan halaman beranda sebuah toko sepatu digital. Pengguna dapat melihat daftar sepatu, mengecek ketersediaan stok, menambahkan sepatu favorit ke dalam _Wishlist_, serta melakukan simulasi pembelian yang akan mengurangi stok secara langsung (real-time). Semua interaksi pengguna akan disimpan secara otomatis sehingga data tidak hilang saat halaman dimuat ulang (refresh) atau tab ditutup.
 
+---
+
+## Integrasi PHP & Sistem Autentikasi
+
+Pada pembaruan ini, arsitektur web ditingkatkan dari sepenuhnya _client-side_ (HTML statis) menjadi web dinamis menggunakan **PHP**. Pembaruan ini berfokus pada penambahan fitur keamanan dan manajemen akses pengguna di sisi server (_server-side_).
+
+### Apa yang Berubah?
+
+- **Migrasi dari HTML ke PHP (`index.html` ➔ `index.php`)**
+  Berkas utama diubah menjadi `.php` agar dapat mengeksekusi logika PHP sebelum halaman dirender. Komponen antarmuka seperti _Navbar_ sekarang bersifat dinamis (menampilkan sapaan user dan tombol Logout jika pengguna sudah login).
+- **Sistem Login & Manajemen Sesi (Session)**
+  Penambahan sistem autentikasi dasar menggunakan `session_start()`. Sistem menggunakan `$_SESSION` untuk mengingat status login pengguna secara aman di memori server selama browser aktif.
+- **Fitur "Remember Me" dengan Cookies**
+  Penambahan opsi "Remember Me" pada form login yang memanfaatkan `$_COOKIE`. Fitur ini menyimpan token login secara persisten di penyimpanan lokal browser, memungkinkan _auto-login_ saat web dibuka kembali tanpa harus mengisi form lagi meskipun browser sempat ditutup.
+
+---
+
 ## Fitur Utama
 
-- **Mode Gelap (Dark Mode) Persisten**
-  - Pengguna dapat beralih antara tema terang dan gelap untuk kenyamanan mata.
-  - Preferensi tema disimpan menggunakan `localStorage`, sehingga saat pengguna kembali membuka web, tema yang dipilih sebelumnya akan tetap aktif.
-
-- **Simulasi Pembelian & Manajemen Stok**
-  - Tombol "Beli" interaktif yang secara dinamis mengurangi jumlah stok sepatu.
-  - Jika stok mencapai **0**, tombol akan otomatis dinonaktifkan (disabled) dan berubah teks menjadi "Habis".
-  - Data sisa stok disimpan di `localStorage` agar data tidak kembali ke angka semula (HTML bawaan) saat halaman ditutup atau di-refresh.
-
-- **Sistem Wishlist (Daftar Keinginan)**
-  - Pengguna dapat menambahkan sepatu ke daftar keinginan menggunakan tombol "Wishlist".
-  - Daftar Wishlist ditampilkan secara rapi di dalam sebuah _Modal_ Bootstrap.
-  - Terdapat penghitung (badge) jumlah item wishlist pada _navbar_ yang diperbarui secara langsung.
-  - Fitur hapus/kosongkan wishlist.
-  - Seluruh data wishlist disimpan secara persisten di `localStorage`.
-
-- **Desain Responsif**
-  - Dibangun dengan **Bootstrap 5**, memastikan tampilan web tetap rapi dan menyesuaikan ukuran layar (Mobile, Tablet, maupun Desktop).
+- **Autentikasi Pengguna:** Login, Logout, dan "Remember Me" menggunakan Session & Cookies.
+- **Mode Gelap (Dark Mode) Persisten:** Menggunakan `localStorage` untuk menyimpan preferensi tema pengguna.
+- **Simulasi Pembelian & Manajemen Stok:** Stok sepatu berkurang secara real-time saat dibeli dan tersimpan di `localStorage`.
+- **Sistem Wishlist (Daftar Keinginan):** Tambah/hapus item favorit dengan lencana (badge) dinamis pada navbar.
+- **Desain Responsif:** Dibangun dengan Bootstrap 5, nyaman dilihat di Mobile maupun Desktop.
 
 ## Teknologi yang Digunakan
 
-- **HTML5:** Untuk kerangka dan struktur halaman.
-- **CSS3 & Bootstrap 5:** Untuk _styling_, _layouting_ (Grid System), komponen UI (Card, Modal, Navbar), dan utilitas desain.
-- **Vanilla JavaScript:** Untuk memberikan logika interaktif, manipulasi DOM, dan pengelolaan `localStorage`.
+- **PHP:** Pemrosesan _server-side_, manajemen sesi, dan cookies.
+- **HTML5 & CSS3:** Struktur dan penyesuaian gaya antarmuka.
+- **Bootstrap 5:** Komponen UI (Card, Modal, Navbar) dan utilitas _layouting_.
+- **Vanilla JavaScript:** Logika interaktif fitur stok, wishlist, dan pergantian tema.
 
 ## Struktur Berkas (File Structure)
 
-- `index.html` — Halaman utama web.
-- `style.css` — Kode CSS kustom (seperti penyesuaian gaya untuk _Dark Mode_).
-- `script.js` — Logika JavaScript utama untuk fungsionalitas aplikasi.
+- `index.php` — _(Diperbarui)_ Halaman utama web yang dilengkapi pengecekan sesi & cookie.
+- `login.php` — _(Baru)_ Halaman form login beserta proses validasi autentikasi.
+- `logout.php` — _(Baru)_ Skrip untuk menghapus sesi/cookie dan melakukan _redirect_ ke beranda.
+- `style.css` — Kode CSS kustom untuk transisi dan mode gelap.
+- `script.js` — Logika _client-side_ untuk simulasi transaksi dan manipulasi DOM.
