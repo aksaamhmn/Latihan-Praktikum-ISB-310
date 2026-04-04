@@ -120,8 +120,11 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Daftar Sepatu</h2>
+        <div class="d-flex justify-content-between mb-3">
+            <h3 class="mb-4">Daftar Sepatu</h3>
+            <a href="{{ route('products') }}" class="text-decoration-none text-primary mb-3">
+                Lihat Semua Produk >>>
+            </a>
         </div>
 
         <div class="row g-4">

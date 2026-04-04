@@ -1,28 +1,23 @@
-# Apaweh Shoes - Laravel Migration
+# Apaweh Shoes - Laravel MVC & Database Integration
 
-Repository ini berisi tugas Week 4 untuk mata kuliah Praktikum ISB-310. Project ini merupakan hasil migrasi aplikasi sistem manajemen sepatu "Apaweh Shoes" dari arsitektur PHP Native ke framework **Laravel** (Konsep MVC).
+Repository ini berisi tugas Week 5 untuk mata kuliah Praktikum ISB-310. Project ini berfokus pada penerapan arsitektur **MVC (Model, View, Controller)** secara utuh dan integrasinya dengan database MySQL menggunakan framework Laravel.
 
-## Fitur Aplikasi
+## Fitur Aplikasi (Week 5)
 
-Aplikasi ini dilengkapi dengan beberapa fitur utama, baik dari sisi _backend_ maupun _frontend_:
+Pada minggu ini, aplikasi telah diubah menjadi dinamis dengan antarmuka yang terhubung langsung ke database:
 
-### Backend (Laravel MVC)
-
-- **Sistem Autentikasi**: Fitur Login dan Logout menggunakan Controller dan logika Session bawaan Laravel.
-- **Dual-Cookie "Remember Me"**:
-    - `user_login`: Cookie berdurasi 60 menit untuk fitur _Auto-Login_ saat browser ditutup.
-    - `remembered_username`: Cookie jangka panjang untuk _pre-fill_ (mengisi otomatis) kolom username di form setelah user melakukan _logout_.
-- **Blade Templating**: Pemisahan antarmuka (View) menggunakan Blade directives (`@if`, `@csrf`, dll).
-- **Asset Management**: Pemanggilan file statis (CSS/JS) yang rapi menggunakan helper `asset()`.
-
-### Frontend (JavaScript & LocalStorage)
-
-- **Dark Mode**: Tema gelap/terang yang preferensinya disimpan di browser.
-- **Sistem Wishlist**: Menambahkan dan menghapus barang ke daftar favorit.
-- **Manajemen Stok**: Simulasi pengurangan stok barang saat tombol "Beli" ditekan (stok akan persisten meskipun halaman di-refresh).
+- **Database Migrations**: Pembuatan skema tabel `categories` dan `products` secara terstruktur, lengkap dengan relasi _Foreign Key_ (Cascade).
+- **Eloquent ORM & Relationships**: Penerapan logika relasi _One-to-Many_ antar Model (menggunakan `hasMany` pada Category dan `belongsTo` pada Product).
+- **Database Seeder**: Injeksi data awal (_dummy data_) secara otomatis ke dalam database untuk keperluan pengujian dan inisialisasi tabel.
+- **Dynamic View (Read)**: Menampilkan daftar produk secara dinamis di halaman web yang di-fetch langsung dari database menggunakan _Blade directive_ `@foreach`.
+- **Fitur Tambah Produk (Create)**: Integrasi Modal Form Bootstrap untuk menginput sepatu baru, lengkap dengan:
+    - Validasi _request_ input di dalam Controller.
+    - Penyimpanan data secara otomatis ke database.
+    - _Flash Message_ (notifikasi sukses) setelah data berhasil ditambahkan.
 
 ## Teknologi yang Digunakan
 
 - **Framework**: Laravel
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Database**: MySQL
+- **Frontend**: HTML5, CSS3
 - **UI/UX**: Bootstrap 5.3
