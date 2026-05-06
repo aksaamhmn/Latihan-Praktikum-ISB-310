@@ -1,39 +1,33 @@
-# Apaweh Shoes - CRUD & Slicing Template
+# Apaweh Shoes - Autentikasi & Middleware (Laravel Breeze)
 
-Repositori ini berisi implementasi dari materi **Slicing Template** dan **CRUD (Create, Read, Update, Delete)** menggunakan framework Laravel. Fokus utama pada materi ini adalah memisahkan komponen antarmuka (UI) menggunakan fitur Blade Templating dan membuat form interaktif menggunakan **Bootstrap Modal**.
+Repositori ini berisi implementasi sistem **Autentikasi** dan proteksi rute (routing) menggunakan **Middleware** dalam framework Laravel. Fokus utama pada repositori ini adalah memigrasikan sistem login manual menjadi sistem autentikasi terstandarisasi untuk mengamankan aplikasi dari akses yang tidak sah menggunakan **Laravel Breeze**.
 
 ## Fitur yang Dikerjakan
 
-1. **Slicing Template (Blade Component)**
-    - Memisahkan struktur utama halaman menggunakan `@extends('layouts.main')`.
-    - Menggunakan `@include` untuk memanggil komponen yang dapat digunakan ulang (reusable), seperti Modal Tambah Produk, Modal Update Produk, dan Modal Wishlist.
-    - Merender daftar produk menggunakan komponen **Bootstrap Card** di dalam _grid system_ (`row` & `col-md-4`).
+1. **Instalasi & Konfigurasi Laravel Breeze**
+    - Mengimplementasikan _starter kit_ Laravel Breeze dengan _stack_ **Blade with Alpine**.
+    - Mengganti sistem login dan manajemen _session_ manual menjadi sistem autentikasi bawaan yang lebih aman dan terstruktur.
 
-2. **Read Data (Menampilkan Produk)**
-    - Menampilkan data produk dari database menggunakan perulangan `@foreach ($products as $item)`.
-    - Menampilkan informasi detail produk: Nama, Harga (dengan format Rupiah), Stok, dan Gambar Produk.
+2. **Proteksi Halaman (Middleware)**
+    - Membatasi akses ke halaman dan aksi tertentu (seperti mengelola produk) hanya untuk pengguna yang terautentikasi.
+    - Menggunakan fungsi pengelompokan `Route::middleware(['auth'])->group(...)` pada file `routes/web.php` untuk melindungi rute secara massal dengan kode yang lebih bersih.
+    - Memuat rute autentikasi bawaan Breeze menggunakan `require __DIR__.'/auth.php';`.
 
-3. **Create Data (Tambah Produk)**
-    - Mengimplementasikan form penambahan data menggunakan **Bootstrap Modal** yang diletakkan di _luar_ blok perulangan produk.
-    - Mendukung fitur _upload_ file gambar dengan atribut `enctype="multipart/form-data"`.
+3. **Manajemen Antarmuka Berbasis Autentikasi**
+    - Menggunakan directive Blade `@auth` untuk menampilkan elemen UI spesifik (seperti nama pengguna aktif via `Auth::user()->name` dan tombol Logout) hanya ketika pengguna sudah login.
+    - Menggunakan directive Blade `@guest` untuk merender tombol Login dan Register bagi pengunjung yang belum terautentikasi.
 
-4. **Update Data (Edit Produk)**
-    - Menggunakan Modal yang diletakkan di _dalam_ blok `@foreach` agar ID dan data produk spesifik (`$item`) dapat dimuat (bind) secara otomatis ke dalam form.
-    - Penggunaan directive `@method('PUT')` pada form HTML.
-    - Fitur opsional untuk mengganti gambar produk (menampilkan _preview_ gambar saat ini).
-
-5. **Delete Data (Hapus Produk)**
-    - Tombol hapus menggunakan tag `<form>` dengan directive `@method('DELETE')`.
-    - Ditambahkan konfirmasi JavaScript (`onsubmit="return confirm(...)"`) sebelum penghapusan dieksekusi untuk mencegah ketidaksengajaan.
-
----
+4. **Kustomisasi Alur Redirect**
+    - Mengubah rute _redirect_ bawaan Laravel Breeze. Secara _default_, Breeze akan mengarahkan pengguna ke rute `/dashboard` setelah berhasil Login atau Registrasi. Alur ini dimodifikasi agar mengarah langsung ke halaman utama (`/`).
 
 ## Catatan Penting & _Troubleshooting_
 
-Selama proses pengerjaan, terdapat beberapa penyesuaian penting yang menjadi _best practice_:
+Selama proses implementasi autentikasi dan middleware, terdapat beberapa praktik keamanan ( _best practice_ ) yang diterapkan:
 
-- **Struktur Modal Bootstrap:** Form aksi (Tambah/Update) **wajib** dibungkus oleh struktur hirarki Modal Bootstrap (`.modal` > `.modal-dialog` > `.modal-content`). Jika hanya berisi tag `<form>`, form tersebut akan tumpah ke halaman utama dan _trigger_ dari tombol tidak akan bekerja.
-- **Penempatan Gambar di Card:** Gambar produk (`<img>` dengan class `card-img-top`) harus diletakkan di _luar_ dan di _atas_ `<div class="card-body">` agar mendapatkan _styling_ dan _border-radius_ yang rapi sesuai standar Bootstrap.
-- **ID Modal Dinamis:** Pada Modal Update, ID modal harus bersifat dinamis (contoh: `id="editProdukModal{{ $item->product_id }}"`) agar tombol "Update" pada card tertentu memicu modal dari data yang benar, bukan modal dari produk pertama.
+- **Keamanan Fitur Logout (Mencegah CSRF):** Pada sistem autentikasi modern Laravel, tombol logout **tidak boleh** dirender sebagai tautan URL biasa (`<a href="...">`). Aksi logout **wajib** menggunakan form dengan method `POST` dan harus menyertakan directive `@csrf`. Hal ini sangat krusial untuk mencegah kerentanan keamanan _Cross-Site Request Forgery_ (CSRF).
+- **Lokasi Modifikasi Redirect:** Kustomisasi tujuan halaman setelah pengguna berhasil login atau mendaftar dilakukan dengan mengubah _return response_ pada method `store()` di dalam dua controller inti Breeze:
+    - `app/Http/Controllers/Auth/AuthenticatedSessionController.php` (untuk Login)
+    - `app/Http/Controllers/Auth/RegisteredUserController.php` (untuk Registrasi)
+- **Penghapusan Sistem Lama:** Setelah migrasi ke Breeze, file seperti `CheckLogin.php` (middleware manual) dan `AuthController.php` (controller login manual) beserta pemanggilan _session_ manual (`session()->has('user')`) sepenuhnya dihapus agar tidak terjadi bentrok logika dengan sistem Breeze.
 
 ---
