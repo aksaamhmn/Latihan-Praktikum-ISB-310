@@ -22,19 +22,27 @@
                 Mode Gelap
             </button>
 
-            @if (session()->has('user'))
-            <span class="text-white me-3">
-                {{ session('user') }}
-            </span>
+            @auth
+                <span class="text-white me-3">
+                    {{ Auth::user()->name }}
+                </span>
 
-            <a href="{{ route('logout') }}" class="btn btn-danger btn-sm">
-                Logout
-            </a>
-            @else
-            <a href="{{ route('login') }}" class="btn btn-warning btn-sm">
-                Login
-            </a>
-            @endif
+                <form action="{{ route('logout') }}" method="POST" class="d-inline m-0 p-0">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Logout
+                    </button>
+                </form>
+            @endauth
+
+            @guest
+                <a href="{{ route('login') }}" class="btn btn-warning btn-sm me-2">
+                    Login
+                </a>
+                <a href="{{ route('register') }}" class="btn btn-outline-light btn-sm">
+                    Register
+                </a>
+            @endguest
 
         </div>
     </div>
