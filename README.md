@@ -1,33 +1,25 @@
-# Apaweh Shoes - Autentikasi & Middleware (Laravel Breeze)
+# Apaweh Shoes - Keamanan Lanjutan, SSO, & Pengujian (Laravel)
 
-Repositori ini berisi implementasi sistem **Autentikasi** dan proteksi rute (routing) menggunakan **Middleware** dalam framework Laravel. Fokus utama pada repositori ini adalah memigrasikan sistem login manual menjadi sistem autentikasi terstandarisasi untuk mengamankan aplikasi dari akses yang tidak sah menggunakan **Laravel Breeze**.
+Repositori ini merupakan kelanjutan pengembangan sistem dengan fokus pada **Peningkatan Keamanan (Security)**, implementasi **Single Sign-On (SSO)**, dan **Pengujian Otomatis (Testing)** menggunakan framework Laravel.
 
-## Fitur yang Dikerjakan
+## Fitur yang Dikerjakan (Week 10)
 
-1. **Instalasi & Konfigurasi Laravel Breeze**
-    - Mengimplementasikan _starter kit_ Laravel Breeze dengan _stack_ **Blade with Alpine**.
-    - Mengganti sistem login dan manajemen _session_ manual menjadi sistem autentikasi bawaan yang lebih aman dan terstruktur.
+1. **Keamanan Registrasi dengan Google reCAPTCHA v2**
+    - Mengintegrasikan layanan Google reCAPTCHA (tipe Checkbox "I'm not a robot") pada form pendaftaran untuk melindungi aplikasi dari spam dan bot otomatis.
+    - Menambahkan validasi HTTP Post di _backend_ (`RegisteredUserController`) untuk memverifikasi token _captcha_ langsung ke server Google sebelum menyimpan data pengguna ke database.
 
-2. **Proteksi Halaman (Middleware)**
-    - Membatasi akses ke halaman dan aksi tertentu (seperti mengelola produk) hanya untuk pengguna yang terautentikasi.
-    - Menggunakan fungsi pengelompokan `Route::middleware(['auth'])->group(...)` pada file `routes/web.php` untuk melindungi rute secara massal dengan kode yang lebih bersih.
-    - Memuat rute autentikasi bawaan Breeze menggunakan `require __DIR__.'/auth.php';`.
+2. **Login Terintegrasi (SSO) menggunakan Google OAuth & Socialite**
+    - Mengimplementasikan _Single Sign-On_ (SSO) menggunakan paket resmi **Laravel Socialite**.
+    - Memungkinkan pengguna untuk masuk (login) ke dalam aplikasi menggunakan akun Google mereka tanpa perlu mendaftar atau memasukkan _password_ secara manual.
+    - Melakukan konfigurasi kredensial OAuth 2.0 Client ID secara eksternal melalui **Google Cloud Platform (GCP)**.
 
-3. **Manajemen Antarmuka Berbasis Autentikasi**
-    - Menggunakan directive Blade `@auth` untuk menampilkan elemen UI spesifik (seperti nama pengguna aktif via `Auth::user()->name` dan tombol Logout) hanya ketika pengguna sudah login.
-    - Menggunakan directive Blade `@guest` untuk merender tombol Login dan Register bagi pengunjung yang belum terautentikasi.
+3. **Pembaruan Struktur Database untuk SSO**
+    - Membuat _migration_ untuk menambahkan kolom `google_id` pada tabel `users`.
+    - Mengubah struktur kolom `password` menjadi `nullable` agar sistem dapat menyimpan otentikasi dari pengguna Google (yang tidak memiliki _password_ lokal).
 
-4. **Kustomisasi Alur Redirect**
-    - Mengubah rute _redirect_ bawaan Laravel Breeze. Secara _default_, Breeze akan mengarahkan pengguna ke rute `/dashboard` setelah berhasil Login atau Registrasi. Alur ini dimodifikasi agar mengarah langsung ke halaman utama (`/`).
-
-## Catatan Penting & _Troubleshooting_
-
-Selama proses implementasi autentikasi dan middleware, terdapat beberapa praktik keamanan ( _best practice_ ) yang diterapkan:
-
-- **Keamanan Fitur Logout (Mencegah CSRF):** Pada sistem autentikasi modern Laravel, tombol logout **tidak boleh** dirender sebagai tautan URL biasa (`<a href="...">`). Aksi logout **wajib** menggunakan form dengan method `POST` dan harus menyertakan directive `@csrf`. Hal ini sangat krusial untuk mencegah kerentanan keamanan _Cross-Site Request Forgery_ (CSRF).
-- **Lokasi Modifikasi Redirect:** Kustomisasi tujuan halaman setelah pengguna berhasil login atau mendaftar dilakukan dengan mengubah _return response_ pada method `store()` di dalam dua controller inti Breeze:
-    - `app/Http/Controllers/Auth/AuthenticatedSessionController.php` (untuk Login)
-    - `app/Http/Controllers/Auth/RegisteredUserController.php` (untuk Registrasi)
-- **Penghapusan Sistem Lama:** Setelah migrasi ke Breeze, file seperti `CheckLogin.php` (middleware manual) dan `AuthController.php` (controller login manual) beserta pemanggilan _session_ manual (`session()->has('user')`) sepenuhnya dihapus agar tidak terjadi bentrok logika dengan sistem Breeze.
+4. **Pengujian Otomatis (Automated Testing) dengan PHPUnit**
+    - Membuat skenario pengujian _Feature Test_ (`AuthFeatureTest`) untuk memastikan stabilitas sistem autentikasi.
+    - Menguji dan memastikan halaman utama dapat dirender dengan benar (HTTP Status 200).
+    - Menguji dan memastikan rute _redirect_ Google Socialite berfungsi dan mengembalikan status _redirect_ (HTTP Status 302).
 
 ---

@@ -43,5 +43,14 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+        <div class="flex items-center my-6">
+            <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+            <span class="px-4 text-sm text-gray-500 dark:text-gray-400">atau masuk dengan</span>
+            <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+        </div>
+
+        <a href="{{ url('/auth/google/redirect') }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 no-underline">
+            Login dengan Google
+        </a>
     </form>
 </x-guest-layout>
